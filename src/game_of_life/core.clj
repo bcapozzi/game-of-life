@@ -5,12 +5,10 @@
   )
 
 (defn matches-posn? [cell posn]
-  ;; (println "checking cell: ", cell, " matches-posn? ", posn)
   (= (:posn cell) posn)
   )
 
 (defn get-cell [cells posn]
-  ;; (println "attempting to find cell at posn: ", posn, cells)
   (first (filter #(matches-posn? % posn) cells))
   )
 
@@ -19,6 +17,7 @@
   )
 
 (defn step-cell [state num-live-neighbors]
+  "Codifies the rules of the game, returning the next state"
   (cond
    (and (is-alive? state) (< num-live-neighbors 2)) 0
    (and (is-alive? state) (or (= 2 num-live-neighbors) (= 3 num-live-neighbors))) 1
@@ -27,21 +26,8 @@
    :else -1)
   )
 
-
-;; (defn update-cells [cells]
-;;   (vec (map update-cell cells))
-;;   )
-
-(defn grid [n1 n2]
-  (let [ xyseq 
-        (for [ x (range 0 n1)
-              y (range 0 n2)]
-          [x y])]
-
-    (vec xyseq)
-  ))
-
 (defn grid2 [n1 n2]
+  "Construct a two-dimensional grid given sizes n1, n2"
   (let [ xyseq 
         (for [ x (range 0 n1)
               y (range 0 n2)]
@@ -51,7 +37,8 @@
   ))
        
 
-  (defn neighbors? [posn1 posn2]
+(defn neighbors? [posn1 posn2]
+  "Determine if two positions are adjacent in the grid"
     (let [dx1 (Math/abs (- (first posn2) (first posn1)))
           dx2 (Math/abs (- (second posn2) (second posn1)))]
 
@@ -63,6 +50,7 @@
     )
 
 (defn neighbors-of [grid posn]
+  "Given a position, return all cells in the grid that are adjacent"
   (let [x1 (first posn)
         x2 (second posn)]
 
@@ -84,7 +72,7 @@
   )
 
 (defn is-in-set? [cell posn-set]
-
+  "Determine if cell position matches any of the supplied positions"
   (loop [posns posn-set result []]
     (cond
      (empty? posns) false
@@ -99,7 +87,6 @@
   )
 
 (defn mark-alive-at-posns [cells posns-to-mark]
-
   (for [c cells]
     (if (is-in-set? c posns-to-mark)
       (mark-alive c)
@@ -108,11 +95,10 @@
   )
 
 (defn count-if-alive [cells]
-  (count  (filter #( is-alive? %) (map :state cells)))
+  (count (filter #( is-alive? %) (map :state cells)))
   )
 
 (defn update-cell [grid cell]
-  ;; (println "updating cell: ", cell)
   (let [state (:state cell)
         n (count-if-alive (neighbors-of grid (:posn cell)))
         new-state (step-cell state n)]
@@ -123,9 +109,6 @@
   )
 
 (defn step [cells]
-  ;; (println "executing step with cells: ", cells)
-  ;; (vec (map update-cell cells))
   (for [c cells]
     (update-cell cells c))
-  ;; (vec (repeat (count cells) 0))
   )

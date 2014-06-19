@@ -12,7 +12,6 @@
 ;; 4   Any dead cell with exactly three live neighbours becomes a live
 ;;     cell, as if by reproduction.
 
-
 (describe "Cell"
  (it "should die if is alive and has less than two live neighbors"
      (should= 0 (step-cell 1 0))
