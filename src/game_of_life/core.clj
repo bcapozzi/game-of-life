@@ -27,17 +27,10 @@
    :else -1)
   )
 
-;; (defn update-cell [cell]
-;;   (let [state (:state cell)
-;;         n (nei)
-;;         n (:neighbors cell)]
-;;     ;; (println state, n)
-;;     (step-cell state n))
-;;   )
 
-(defn update-cells [cells]
-  (vec (map update-cell cells))
-  )
+;; (defn update-cells [cells]
+;;   (vec (map update-cell cells))
+;;   )
 
 (defn grid [n1 n2]
   (let [ xyseq 

@@ -13,10 +13,7 @@
 ;;     cell, as if by reproduction.
 
 
-(describe
- "Cell"
- 
-
+(describe "Cell"
  (it "should die if is alive and has less than two live neighbors"
      (should= 0 (step-cell 1 0))
      (should= 0 (step-cell 1 1)))
