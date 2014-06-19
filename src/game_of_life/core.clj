@@ -4,6 +4,20 @@
   (> state 0)
   )
 
+(defn matches-posn? [cell posn]
+  ;; (println "checking cell: ", cell, " matches-posn? ", posn)
+  (= (:posn cell) posn)
+  )
+
+(defn get-cell [cells posn]
+  ;; (println "attempting to find cell at posn: ", posn, cells)
+  (first (filter #(matches-posn? % posn) cells))
+  )
+
+(defn is-cell-at-posn-alive? [cells posn]
+  (is-alive? (:state (get-cell cells posn)))
+  )
+
 (defn step-cell [state num-live-neighbors]
   (cond
    (and (is-alive? state) (< num-live-neighbors 2)) 0
@@ -13,16 +27,13 @@
    :else -1)
   )
 
-(defn step [cells]
-  (vec (repeat (count cells) 0))
-  )
-
-(defn update-cell [cell]
-  (let [state (:state cell)
-        n (:neighbors cell)]
-    ;; (println state, n)
-    (step-cell state n))
-  )
+;; (defn update-cell [cell]
+;;   (let [state (:state cell)
+;;         n (nei)
+;;         n (:neighbors cell)]
+;;     ;; (println state, n)
+;;     (step-cell state n))
+;;   )
 
 (defn update-cells [cells]
   (vec (map update-cell cells))
@@ -73,4 +84,55 @@
               neighbors)
        
        )))
+  )
+
+(defn matches-posn? [cell posn]
+  (= (:posn cell) posn)
+  )
+
+(defn is-in-set? [cell posn-set]
+
+  (loop [posns posn-set result []]
+    (cond
+     (empty? posns) false
+     (matches-posn? cell (first posns)) true
+     :else (recur (drop 1 posns) result)
+     )
+    )
+  )
+
+(defn mark-alive [cell]
+  (assoc cell :state 1)
+  )
+
+(defn mark-alive-at-posns [cells posns-to-mark]
+
+  (for [c cells]
+    (if (is-in-set? c posns-to-mark)
+      (mark-alive c)
+      c)
+    )
+  )
+
+(defn count-if-alive [cells]
+  (count  (filter #( is-alive? %) (map :state cells)))
+  )
+
+(defn update-cell [grid cell]
+  ;; (println "updating cell: ", cell)
+  (let [state (:state cell)
+        n (count-if-alive (neighbors-of grid (:posn cell)))
+        new-state (step-cell state n)]
+    
+    (assoc cell :state new-state)
+    
+    )
+  )
+
+(defn step [cells]
+  ;; (println "executing step with cells: ", cells)
+  ;; (vec (map update-cell cells))
+  (for [c cells]
+    (update-cell cells c))
+  ;; (vec (repeat (count cells) 0))
   )

@@ -15,10 +15,7 @@
 
 (describe
  "Cell"
- (let [cells [0 0 1 0 0]]
-   (it "all cells should be dead if no cell has two or more neighbors"
-       (should= [0 0 0 0 0] (step cells)))
-   )
+ 
 
  (it "should die if is alive and has less than two live neighbors"
      (should= 0 (step-cell 1 0))
@@ -57,4 +54,11 @@
         )
     )
 
-)
+  (let [cells (mark-alive-at-posns (grid2 2 2) [[0 1] [1 1] [1 0]])]
+    (it "can advance the state of the world one step"
+           (should= true (is-cell-at-posn-alive? (step cells) [0 0]))
+           )
+    )
+
+  )
+
