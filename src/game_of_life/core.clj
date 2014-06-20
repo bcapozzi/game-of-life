@@ -16,6 +16,11 @@
   (is-alive? (:state (get-cell cells posn)))
   )
 
+(defn unhandled-case [state num-live-neighbors]
+  (println "unhandled: ", state, num-live-neighbors)
+  -1
+  )
+
 (defn step-cell [state num-live-neighbors]
   "Codifies the rules of the game, returning the next state"
   (cond
@@ -23,7 +28,9 @@
    (and (is-alive? state) (or (= 2 num-live-neighbors) (= 3 num-live-neighbors))) 1
    (and (is-alive? state) (> num-live-neighbors 3)) 0
    (and (not (is-alive? state)) (= num-live-neighbors 3)) 1 
-   :else -1)
+   :else 0
+      ;; (unhandled-case state num-live-neighbors)
+   )
   )
 
 (defn grid2 [n1 n2]
